@@ -22,25 +22,39 @@
       <!-- Right elements -->
       <div class="d-flex align-items-center">
         <!-- Icon -->
-        <a class="btn btn-primary me-3" href="/publish">Publish My Book</a>
-        <a><i class="bi bi-cart3 fs-3 me-3"></i></a>
+        <!-- <a class="btn btn-primary me-3" href="/publish">Publish My Book</a> -->
 
-        <a><i class="bi bi-book fs-3 me-3" ></i></a>
+        <!-- <a><i class="bi bi-book fs-3 me-3" ></i></a> -->
 
         <ul class="navbar-nav me-auto mb-2 mb-lg-0" me-3>
           {% if user.is_authenticated %} 
 
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="logout"><i class="bi bi-power fs-3 me-3"></i></a>
+            <a class="btn btn-primary me-3 mt-2 "  href="/publish">Publish My Book</a>
+          </li>
+
+          <li class="nav-item">
+            <a href="/mybooks" class="nav-link active "><i class="bi bi-book fs-3" ></i></a>
+          </li>
+
+          <li class="nav-item">
+
+            <a class="nav-link active position-relative" aria-current="page" href="/cart"> <i class="bi bi-cart3 fs-3 me-1"></i><span style="left: 75%; top: 28%;" class="position-absolute translate-middle badge rounded-pill bg-danger">
+             {{cartvalue}}</span></a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/logout"><i class="bi bi-power fs-3 me-3"></i></a>
+          </li>
 
           {% else %}
 
           
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="login">login</a>
+            <a class="nav-link active" aria-current="page" href="/login">login</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="register">Register</a>
+            <a class="nav-link active" aria-current="page" href="/register">Register</a>
           </li>
           
           {% endif %}
@@ -63,13 +77,15 @@
               Books 
             </a>
             <ul class="dropdown-menu" style="text-align: center;">
+              <li><a class="dropdown-item" href="/">All</a></li>
+              <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="/category/novel">Novel</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="/category/story">Story</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="/category/Comics">Comics</a></li>
+              <li><a class="dropdown-item" href="/category/comic">Comics</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="/category/Historical">Historical</a></li>
+              <li><a class="dropdown-item" href="/category/historical">Historical</a></li>
             </ul>
           </li>
           <br>
@@ -78,9 +94,9 @@
               Sort By
             </a>
             <ul class="dropdown-menu" style="text-align: center;" >
-              <li><a class="dropdown-item" href="">Price Low to High</a></li>
+              <li><a class="dropdown-item" href="/sort/asc">Price Low to High</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="">Price High to Low</a></li>
+              <li><a class="dropdown-item" href="/sort/desc">Price High to Low</a></li>
             </ul>
           </li>
           <br>
@@ -89,7 +105,7 @@
               Price
             </a>
             <ul class="dropdown-menu" style="text-align: center;">
-              <form class="m-2" action="" method="POST">
+              <form class="m-2" action="/search/" method="POST">
                 {% csrf_token %}
                 <input class="form-control me-2 mb-2" type="number" placeholder="min" name="min">
                 <input class="form-control me-2 mb-2" type="number" placeholder="max" name="max">
@@ -105,6 +121,25 @@
     </div>
     <div class="col-10">
       <div class="container">
+        {% if  messages %}
+         
+         {% for message in messages %}
+            
+            {% if message.tags == "error" %}
+               <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+                  {{message}}
+               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+               </div>
+            {% else %}
+               <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                  {{message}}
+               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+               </div>
+            {% endif %}
+               
+         {% endfor %}
+            
+       {% endif %}
         <div class="row">
           {% for book in books %}
           <div class="col-3 text-center mt-5"  style="height: 500px;"> <div style="height: 80%; width: 100%;"> <img src="http://127.0.0.1:8000{{book.image.url}}" height="100%" width="100%" alt="">
@@ -115,7 +150,7 @@
           <p>{{book.author.username}}</p>
           <p class="d-inline-flex me-5 mb-2">&#8377;{{book.price}}</p>
 
-          <a href="#" class="btn btn-primary d-inline-flex mb-2">Add TO Cart</a>
+          <a href="/addtocart/{{book.id}}" class="btn btn-primary d-inline-flex mb-2">Add TO Cart</a>
           </div>
           {% endfor %}
 </div>

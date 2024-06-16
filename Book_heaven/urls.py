@@ -29,6 +29,26 @@ urlpatterns = [
     path('login/', views.user_login),
     path('register/', views.user_register),
     path('publish', bookviews.publish),
+    path('category/<category_value>', views.filter_by_category),
+    path('sort/<sort_value>', views.sort_by_price),
+    path('search/', views.search_by_price_range),
+    # creating admin urls 
+    path('adminpanel/', views.admin_panel),
+    path('adminpanel/authorize/', views.not_available),
+    path('adminpanel/edit_book/<int>', views.edit_book),
+    # add to cart url
+    path('addtocart/<book_id>', views.add_to_cart),
+    path('cart/', views.cart),
+    path('cartupdate/<cartid>/<flag>', views.update_quantity),
+    path('deletecart/<cart_id>', views.cart_delete),
+    path('order/<payment_id>/<amount>', views.order),
+    path('mybooks/', views.my_books )
+
+
+    
+
+
+    
 
     
     
